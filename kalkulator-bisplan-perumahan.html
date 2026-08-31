@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Bisnis Plan Perumahan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-deep:#0F2A3D;
+    --blue-panel:#153347;
+    --blue-line:#2F5570;
+    --cyan:#6FB8D1;
+    --cyan-bright:#9ED8EA;
+    --paper:#F6F3EA;
+    --paper-dim:#E9E4D4;
+    --ink:#16324A;
+    --copper:#C97D3C;
+    --copper-bright:#E0994F;
+    --green:#4C8C6B;
+    --rust:#B4482F;
+    --text-onblue:#DCEAF2;
+    --text-onblue-dim:#8FB0C2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--blue-deep);
+    background-image:
+      linear-gradient(var(--blue-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blue-line) 1px, transparent 1px);
+    background-size:28px 28px;
+    background-attachment:fixed;
+    font-family:'IBM Plex Sans', sans-serif;
+    color:var(--text-onblue);
+    padding:0;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 20px 80px;}
+  .titleblock{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    border-bottom:2px solid var(--cyan);
+    padding-bottom:18px;margin-bottom:28px;flex-wrap:wrap;gap:12px;
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;font-size:30px;margin:0;color:#fff;letter-spacing:0.3px;
+  }
+  .subtitle{color:var(--text-onblue-dim);font-size:14px;margin-top:4px;}
+  .sheetno{
+    font-family:'IBM Plex Mono', monospace;font-size:13px;color:var(--cyan-bright);
+    border:1px solid var(--cyan);padding:6px 12px;border-radius:2px;letter-spacing:1px;
+  }
+  .section{
+    background:var(--paper);
+    border-radius:3px;
+    margin-bottom:20px;
+    position:relative;
+    box-shadow:0 4px 18px rgba(0,0,0,0.28);
+  }
+  .section-head{
+    display:flex;align-items:center;gap:14px;
+    padding:16px 22px;border-bottom:1px solid var(--paper-dim);
+  }
+  .section-num{
+    font-family:'IBM Plex Mono', monospace;font-weight:600;font-size:13px;
+    color:#fff;background:var(--ink);padding:4px 9px;border-radius:2px;letter-spacing:1px;
+  }
+  .section-title{font-family:'Space Grotesk', sans-serif;font-weight:600;font-size:17px;color:var(--ink);}
+  .section-body{padding:20px 22px 24px;color:var(--ink);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+  @media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr;}}
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+  .field label{font-size:12.5px;color:#5A6E7C;font-weight:500;}
+  .field input, .field select{
+    font-family:'IBM Plex Mono', monospace;font-size:14px;
+    padding:9px 10px;border:1px solid #C7BFA6;border-radius:2px;
+    background:#FFFDF7;color:var(--ink);
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--copper);outline-offset:0;}
+  .unit-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px;}
+  .unit-table th{
+    text-align:left;font-size:11.5px;color:#5A6E7C;font-weight:600;
+    padding:6px 6px;border-bottom:1px solid #C7BFA6;text-transform:uppercase;letter-spacing:0.4px;
+  }
+  .unit-table td{padding:5px 6px;}
+  .unit-table input{width:100%;padding:6px 7px;font-family:'IBM Plex Mono', monospace;font-size:13px;border:1px solid #C7BFA6;border-radius:2px;background:#FFFDF7;color:var(--ink);}
+  .divider{border:none;border-top:1px dashed #C7BFA6;margin:18px 0;}
+  .subhead{font-family:'Space Grotesk', sans-serif;font-weight:600;font-size:13.5px;color:var(--ink);margin:0 0 10px;text-transform:uppercase;letter-spacing:0.4px;}
+  .row-line{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #EDE7D5;font-size:13.5px;}
+  .row-line:last-child{border-bottom:none;}
+  .row-line .lbl{color:#4A5E6C;}
+  .row-line .val{font-family:'IBM Plex Mono', monospace;font-weight:500;color:var(--ink);}
+  .row-total{font-weight:700;color:var(--ink);border-top:2px solid var(--ink);margin-top:4px;padding-top:10px;}
+  .ruler{
+    display:flex;align-items:stretch;background:var(--ink);border-radius:3px;overflow:hidden;margin-top:8px;
+  }
+  .ruler-seg{padding:14px 16px;flex:1;border-right:1px solid rgba(255,255,255,0.15);}
+  .ruler-seg:last-child{border-right:none;}
+  .ruler-seg .lbl{font-size:11px;color:var(--cyan-bright);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;}
+  .ruler-seg .val{font-family:'IBM Plex Mono', monospace;font-size:16px;font-weight:600;color:#fff;}
+  .pnl-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0;font-size:13.5px;}
+  .pnl-grid .h{font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:0.4px;color:#5A6E7C;padding:8px 6px;border-bottom:1px solid #C7BFA6;}
+  .pnl-grid .c{padding:7px 6px;border-bottom:1px solid #EDE7D5;font-family:'IBM Plex Mono', monospace;text-align:right;}
+  .pnl-grid .lc{font-family:'IBM Plex Sans', sans-serif;text-align:left;color:#4A5E6C;}
+  .pnl-grid .strong{font-weight:700;color:var(--ink);}
+  .pnl-grid .accent-pos{color:var(--green);}
+  .pnl-grid .accent-neg{color:var(--rust);}
+  .cashflow-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px;}
+  .cashflow-table th{
+    font-family:'IBM Plex Mono', monospace;font-size:11px;color:#5A6E7C;font-weight:600;
+    padding:7px 6px;border-bottom:1px solid #C7BFA6;text-align:right;white-space:nowrap;
+  }
+  .cashflow-table th:first-child{text-align:left;}
+  .cashflow-table td{padding:6px 6px;text-align:right;font-family:'IBM Plex Mono', monospace;border-bottom:1px solid #EDE7D5;}
+  .cashflow-table td:first-child{text-align:left;font-family:'IBM Plex Sans', sans-serif;color:#4A5E6C;}
+  .cashflow-table input{width:64px;padding:5px 5px;text-align:right;font-family:'IBM Plex Mono', monospace;font-size:12.5px;border:1px solid #C7BFA6;border-radius:2px;background:#FFFDF7;color:var(--ink);}
+  .cashflow-table .strong{font-weight:700;color:var(--ink);}
+  .cashflow-table .accent-pos{color:var(--green);font-weight:600;}
+  .cashflow-table .accent-neg{color:var(--rust);font-weight:600;}
+  .chartwrap{margin-top:18px;padding:16px;background:#FFFDF7;border:1px solid #C7BFA6;border-radius:2px;}
+  .legend{display:flex;gap:18px;font-size:12px;margin-bottom:10px;color:#4A5E6C;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend i{width:10px;height:10px;display:inline-block;border-radius:2px;}
+  .note{font-size:12px;color:#7A8A95;margin-top:14px;line-height:1.6;}
+  .badge-margin{
+    display:inline-block;padding:3px 10px;border-radius:2px;font-family:'IBM Plex Mono', monospace;
+    font-size:13px;font-weight:600;
+  }
+  .badge-pos{background:#E1EFE6;color:var(--green);}
+  .badge-neg{background:#F6E2DC;color:var(--rust);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="titleblock">
+    <div>
+      <h1>Kalkulator bisnis plan perumahan</h1>
+      <div class="subtitle">Dari tanah mentah sampai proyeksi cashflow — angka contoh, silakan diganti sesuai proyekmu</div>
+    </div>
+    <div class="sheetno">REV 01 — LEMBAR 01/07</div>
+  </div>
+
+  <!-- SECTION 1: PARAMETER -->
+  <div class="section">
+    <div class="section-head"><span class="section-num">01</span><span class="section-title">Parameter proyek</span></div>
+    <div class="section-body">
+      <div class="grid3">
+        <div class="field"><label>Luas lahan (m²)</label><input type="number" id="luasLahan" value="5000"></div>
+        <div class="field"><label>Tanah efektif (%)</label><input type="number" id="tanahEfektif" value="60"></div>
+        <div class="field"><label>Durasi proyek (bulan)</label><input type="number" id="durasi" value="36"></div>
+      </div>
+      <hr class="divider">
+      <p class="subhead">Tipe rumah</p>
+      <table class="unit-table">
+        <thead><tr><th>Tipe</th><th>L. bangunan (m²)</th><th>L. tanah (m²)</th><th>Jumlah unit</th><th>Harga jual (Rp)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Tipe 1</td>
+            <td><input type="number" id="t1_lb" value="70"></td>
+            <td><input type="number" id="t1_lt" value="100"></td>
+            <td><input type="number" id="t1_unit" value="10"></td>
+            <td><input type="number" id="t1_harga" value="700000000"></td>
+          </tr>
+          <tr>
+            <td>Tipe 2</td>
+            <td><input type="number" id="t2_lb" value="100"></td>
+            <td><input type="number" id="t2_lt" value="120"></td>
+            <td><input type="number" id="t2_unit" value="15"></td>
+            <td><input type="number" id="t2_harga" value="950000000"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="ruler" id="parameterRuler"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: HPP TANAH -->
+  <div class="section">
+    <div class="section-head"><span class="section-num">02</span><span class="section-title">HPP tanah</span></div>
+    <div class="section-body">
+      <div class="grid3">
+        <div class="field"><label>Harga akuisisi tanah / m² (Rp)</label><input type="number" id="hargaTanahM2" value="1500000"></div>
+        <div class="field"><label>Biaya perizinan (Rp, lumpsum)</label><input type="number" id="biayaPerizinan" value="300000000"></div>
+        <div class="field"><label>Biaya legalitas &amp; notaris (Rp, lumpsum)</label><input type="number" id="biayaLegalitas" value="80000000"></div>
+        <div class="field"><label>Infrastruktur (cut&amp;fill, jalan kerja, dst) (Rp)</label><input type="number" id="biayaInfra" value="900000000"></div>
+        <div class="field"><label>Fasum &amp; fasos (Rp)</label><input type="number" id="biayaFasum" value="400000000"></div>
+        <div class="field"><label>Perencanaan &amp; persiapan (Rp)</label><input type="number" id="biayaPerencanaan" value="120000000"></div>
+      </div>
+      <hr class="divider">
+      <div id="hppTanahBreakdown"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: HPP BANGUNAN -->
+  <div class="section">
+    <div class="section-head"><span class="section-num">03</span><span class="section-title">HPP bangunan</span></div>
+    <div class="section-body">
+      <div class="grid3">
+        <div class="field"><label>Biaya konstruksi / m² (Rp)</label><input type="number" id="konstruksiM2" value="3400000"></div>
+        <div class="field"><label>Listrik &amp; air / unit (Rp)</label><input type="number" id="listrikAirUnit" value="20000000"></div>
+        <div class="field"><label>Taman / unit (Rp)</label><input type="number" id="tamanUnit" value="2500000"></div>
+        <div class="field"><label>PPJB / unit (Rp)</label><input type="number" id="ppjbUnit" value="1000000"></div>
+        <div class="field"><label>IMB / unit (Rp)</label><input type="number" id="imbUnit" value="7000000"></div>
+      </div>
+      <hr class="divider">
+      <div id="hppBangunanBreakdown"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: OPEX -->
+  <div class="section">
+    <div class="section-head"><span class="section-num">04</span><span class="section-title">Opex</span></div>
+    <div class="section-body">
+      <div class="grid3">
+        <div class="field"><label>Admin &amp; umum / bulan (Rp)</label><input type="number" id="opexAdmin" value="12000000"></div>
+        <div class="field"><label>Gaji &amp; tenaga kerja / bulan (Rp)</label><input type="number" id="opexGaji" value="25000000"></div>
+        <div class="field"><label>Marketing (% dari sales) </label><input type="number" id="opexMarketingPct" value="1.5"></div>
+      </div>
+      <hr class="divider">
+      <div id="opexBreakdown"></div>
+      <p class="note">Admin dan gaji dihitung per bulan × durasi proyek. Marketing dihitung sebagai persentase dari total sales.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 5: POTONGAN PENJUALAN -->
+  <div class="section">
+    <div class="section-head"><span class="section-num">05</span><span class="section-title">Potongan penjualan</span></div>
+    <div class="section-body">
+      <div class="grid3">
+        <div class="field"><label>Diskon penjualan (%)</label><input type="number" id="diskonPct" value="0"></div>
+        <div class="field"><label>Fee sales / agent (%)</label><input type="number" id="feeSalesPct" value="3.5"></div>
+        <div class="field"><label>PPh final (%)</label><input type="number" id="pphPct" value="2.5"></div>
+        <div class="field"><label>AJB + balik nama / unit (Rp)</label><input type="number" id="ajbUnit" value="5000000"></div>
+        <div class="field"><label>BPHTB (%)</label><input type="number" id="bphtbPct" value="0"></div>
+      </div>
+      <hr class="divider">
+      <div id="potonganBreakdown"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: PNL -->
+  <div class="section">
+    <div class="section-head"><span class="section-num">06</span><span class="section-title">Ringkasan PnL</span></div>
+    <div class="section-body">
+      <div class="pnl-grid" id="pnlGrid"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: CASHFLOW -->
+  <div class="section">
+    <div class="section-head"><span class="section-num">07</span><span class="section-title">Proyeksi cashflow per tahun</span></div>
+    <div class="section-body">
+      <p class="note" style="margin-top:0;">Isi jumlah unit terjual dan persentase capex yang dikeluarkan di tiap tahun. Opex dan sisa capex otomatis menyesuaikan.</p>
+      <div style="overflow-x:auto;">
+        <table class="cashflow-table" id="cashflowTable"></table>
+      </div>
+      <div class="chartwrap">
+        <div class="legend">
+          <span><i style="background:var(--cyan);"></i>Kas masuk kumulatif</span>
+          <span><i style="background:var(--copper);"></i>Kas keluar kumulatif</span>
+        </div>
+        <svg id="cfChart" width="100%" height="180" viewBox="0 0 1000 180" preserveAspectRatio="none"></svg>
+      </div>
+    </div>
+  </div>
+
+  <p class="note" style="text-align:center;color:var(--text-onblue-dim);">Kalkulator ini dibuat sebagai portofolio pribadi. Semua angka default hanya contoh — sesuaikan dengan data proyek nyata sebelum digunakan untuk keputusan bisnis.</p>
+
+</div>
+
+<script>
+function fmt(n){
+  if(!isFinite(n)) n = 0;
+  n = Math.round(n);
+  return n.toLocaleString('id-ID');
+}
+function num(id){ return parseFloat(document.getElementById(id).value) || 0; }
+
+function calc(){
+  const luasLahan = num('luasLahan');
+  const tanahEfektifPct = num('tanahEfektif')/100;
+  const durasiBulan = num('durasi');
+  const durasiTahun = Math.max(1, Math.ceil(durasiBulan/12));
+
+  const t1 = { lb: num('t1_lb'), lt: num('t1_lt'), unit: num('t1_unit'), harga: num('t1_harga') };
+  const t2 = { lb: num('t2_lb'), lt: num('t2_lt'), unit: num('t2_unit'), harga: num('t2_harga') };
+  const totalUnit = t1.unit + t2.unit;
+  const totalSellable = (t1.lb*t1.unit) + (t2.lb*t2.unit);
+  const tanahEfektif = luasLahan * tanahEfektifPct;
+
+  document.getElementById('parameterRuler').innerHTML = `
+    <div class="ruler-seg"><div class="lbl">Tanah efektif</div><div class="val">${fmt(tanahEfektif)} m²</div></div>
+    <div class="ruler-seg"><div class="lbl">Total unit</div><div class="val">${fmt(totalUnit)}</div></div>
+    <div class="ruler-seg"><div class="lbl">Total sellable</div><div class="val">${fmt(totalSellable)} m²</div></div>
+    <div class="ruler-seg"><div class="lbl">Durasi</div><div class="val">${fmt(durasiBulan)} bln</div></div>
+  `;
+
+  // HPP TANAH
+  const akuisisi = luasLahan * num('hargaTanahM2');
+  const perizinan = num('biayaPerizinan');
+  const legalitas = num('biayaLegalitas');
+  const infra = num('biayaInfra');
+  const fasum = num('biayaFasum');
+  const perencanaan = num('biayaPerencanaan');
+  const totalHppTanah = akuisisi + perizinan + legalitas + infra + fasum + perencanaan;
+
+  document.getElementById('hppTanahBreakdown').innerHTML = `
+    <div class="row-line"><span class="lbl">Akuisisi tanah (${fmt(luasLahan)} m² × harga/m²)</span><span class="val">Rp ${fmt(akuisisi)}</span></div>
+    <div class="row-line"><span class="lbl">Perizinan</span><span class="val">Rp ${fmt(perizinan)}</span></div>
+    <div class="row-line"><span class="lbl">Legalitas &amp; notaris</span><span class="val">Rp ${fmt(legalitas)}</span></div>
+    <div class="row-line"><span class="lbl">Infrastruktur</span><span class="val">Rp ${fmt(infra)}</span></div>
+    <div class="row-line"><span class="lbl">Fasum &amp; fasos</span><span class="val">Rp ${fmt(fasum)}</span></div>
+    <div class="row-line"><span class="lbl">Perencanaan &amp; persiapan</span><span class="val">Rp ${fmt(perencanaan)}</span></div>
+    <div class="row-line row-total"><span class="lbl">Total HPP tanah</span><span class="val">Rp ${fmt(totalHppTanah)}</span></div>
+    <div class="row-line"><span class="lbl">HPP tanah / m² sellable</span><span class="val">Rp ${fmt(totalHppTanah/(totalSellable||1))}</span></div>
+  `;
+
+  // HPP BANGUNAN
+  const konstruksi = totalSellable * num('konstruksiM2');
+  const listrikAir = totalUnit * num('listrikAirUnit');
+  const taman = totalUnit * num('tamanUnit');
+  const ppjb = totalUnit * num('ppjbUnit');
+  const imb = totalUnit * num('imbUnit');
+  const totalHppBangunan = konstruksi + listrikAir + taman + ppjb + imb;
+
+  document.getElementById('hppBangunanBreakdown').innerHTML = `
+    <div class="row-line"><span class="lbl">Konstruksi (${fmt(totalSellable)} m² × biaya/m²)</span><span class="val">Rp ${fmt(konstruksi)}</span></div>
+    <div class="row-line"><span class="lbl">Listrik &amp; air (${fmt(totalUnit)} unit)</span><span class="val">Rp ${fmt(listrikAir)}</span></div>
+    <div class="row-line"><span class="lbl">Taman (${fmt(totalUnit)} unit)</span><span class="val">Rp ${fmt(taman)}</span></div>
+    <div class="row-line"><span class="lbl">PPJB (${fmt(totalUnit)} unit)</span><span class="val">Rp ${fmt(ppjb)}</span></div>
+    <div class="row-line"><span class="lbl">IMB (${fmt(totalUnit)} unit)</span><span class="val">Rp ${fmt(imb)}</span></div>
+    <div class="row-line row-total"><span class="lbl">Total HPP bangunan</span><span class="val">Rp ${fmt(totalHppBangunan)}</span></div>
+  `;
+
+  const totalCapex = totalHppTanah + totalHppBangunan;
+
+  // SALES
+  const salesT1 = t1.unit * t1.harga;
+  const salesT2 = t2.unit * t2.harga;
+  const totalSales = salesT1 + salesT2;
+
+  // OPEX
+  const opexAdminTotal = num('opexAdmin') * durasiBulan;
+  const opexGajiTotal = num('opexGaji') * durasiBulan;
+  const opexMarketingTotal = totalSales * (num('opexMarketingPct')/100);
+  const totalOpex = opexAdminTotal + opexGajiTotal + opexMarketingTotal;
+
+  document.getElementById('opexBreakdown').innerHTML = `
+    <div class="row-line"><span class="lbl">Admin &amp; umum (${fmt(durasiBulan)} bln)</span><span class="val">Rp ${fmt(opexAdminTotal)}</span></div>
+    <div class="row-line"><span class="lbl">Gaji &amp; tenaga kerja (${fmt(durasiBulan)} bln)</span><span class="val">Rp ${fmt(opexGajiTotal)}</span></div>
+    <div class="row-line"><span class="lbl">Marketing (${num('opexMarketingPct')}% dari sales)</span><span class="val">Rp ${fmt(opexMarketingTotal)}</span></div>
+    <div class="row-line row-total"><span class="lbl">Total opex</span><span class="val">Rp ${fmt(totalOpex)}</span></div>
+  `;
+
+  // POTONGAN
+  const diskon = totalSales * (num('diskonPct')/100);
+  const feeSales = totalSales * (num('feeSalesPct')/100);
+  const pph = totalSales * (num('pphPct')/100);
+  const bphtb = totalSales * (num('bphtbPct')/100);
+  const ajb = totalUnit * num('ajbUnit');
+  const totalPotongan = diskon + feeSales + pph + bphtb + ajb;
+
+  document.getElementById('potonganBreakdown').innerHTML = `
+    <div class="row-line"><span class="lbl">Diskon penjualan</span><span class="val">Rp ${fmt(diskon)}</span></div>
+    <div class="row-line"><span class="lbl">Fee sales / agent</span><span class="val">Rp ${fmt(feeSales)}</span></div>
+    <div class="row-line"><span class="lbl">PPh final</span><span class="val">Rp ${fmt(pph)}</span></div>
+    <div class="row-line"><span class="lbl">BPHTB</span><span class="val">Rp ${fmt(bphtb)}</span></div>
+    <div class="row-line"><span class="lbl">AJB + balik nama</span><span class="val">Rp ${fmt(ajb)}</span></div>
+    <div class="row-line row-total"><span class="lbl">Total potongan penjualan</span><span class="val">Rp ${fmt(totalPotongan)}</span></div>
+  `;
+
+  const netSales = totalSales - totalPotongan;
+  const operatingMargin = netSales - totalCapex - totalOpex;
+  const marginPct = totalSales ? (operatingMargin/totalSales*100) : 0;
+
+  const pnlRows = [
+    ['Sales (harga jual × unit)', totalSales, ''],
+    ['Potongan penjualan', -totalPotongan, ''],
+    ['Net sales', netSales, 'strong'],
+    ['Capex (HPP tanah + bangunan)', -totalCapex, ''],
+    ['Opex', -totalOpex, ''],
+    ['Operating margin', operatingMargin, 'strong ' + (operatingMargin>=0?'accent-pos':'accent-neg')],
+  ];
+  let pnlHtml = `<div class="h lc">Uraian</div><div class="h">Nilai (Rp)</div><div class="h">% sales</div>`;
+  pnlRows.forEach(r=>{
+    const pct = totalSales ? (r[1]/totalSales*100) : 0;
+    pnlHtml += `<div class="c lc ${r[2]}">${r[0]}</div><div class="c ${r[2]}">${fmt(r[1])}</div><div class="c ${r[2]}">${pct.toFixed(1)}%</div>`;
+  });
+  document.getElementById('pnlGrid').innerHTML = pnlHtml + `
+    <div style="grid-column:1/-1;margin-top:14px;">
+      <span class="badge-margin ${operatingMargin>=0?'badge-pos':'badge-neg'}">Margin ${marginPct.toFixed(1)}%</span>
+    </div>`;
+
+  buildCashflow(totalUnit, totalSales/ (totalUnit||1), totalCapex, totalOpex, durasiTahun, totalPotongan/(totalSales||1));
+}
+
+let cfState = {};
+function buildCashflow(totalUnit, avgPrice, totalCapex, totalOpex, tahun, potonganRatio){
+  const table = document.getElementById('cashflowTable');
+  if(!cfState.tahun || cfState.tahun !== tahun){
+    cfState = { tahun: tahun, unitPerTahun: [], capexPct: [] };
+    const evenUnit = Math.round(totalUnit / tahun);
+    const evenCapex = Math.round(100 / tahun);
+    for(let i=0;i<tahun;i++){
+      cfState.unitPerTahun.push(i===tahun-1 ? Math.max(0,totalUnit - evenUnit*(tahun-1)) : evenUnit);
+      cfState.capexPct.push(i===tahun-1 ? Math.max(0,100 - evenCapex*(tahun-1)) : evenCapex);
+    }
+  }
+
+  let head = '<tr><th>Uraian</th>';
+  for(let i=1;i<=tahun;i++) head += `<th>Tahun ${i}</th>`;
+  head += '<th>Total</th></tr>';
+
+  let unitRow = '<tr><td>Unit terjual</td>';
+  for(let i=0;i<tahun;i++){
+    unitRow += `<td><input type="number" min="0" value="${cfState.unitPerTahun[i]}" onchange="updateUnit(${i}, this.value)"></td>`;
+  }
+  unitRow += `<td class="strong">${fmt(cfState.unitPerTahun.reduce((a,b)=>a+b,0))}</td></tr>`;
+
+  let capexPctRow = '<tr><td>Capex dikeluarkan (%)</td>';
+  for(let i=0;i<tahun;i++){
+    capexPctRow += `<td><input type="number" min="0" max="100" value="${cfState.capexPct[i]}" onchange="updateCapexPct(${i}, this.value)"></td>`;
+  }
+  const totalPct = cfState.capexPct.reduce((a,b)=>a+b,0);
+  capexPctRow += `<td class="strong">${fmt(totalPct)}%</td></tr>`;
+
+  let salesRow = '<tr><td>Kas masuk (net sales)</td>';
+  const inflows = [];
+  for(let i=0;i<tahun;i++){
+    const gross = cfState.unitPerTahun[i]*avgPrice;
+    const net = gross*(1-potonganRatio);
+    inflows.push(net);
+    salesRow += `<td>${fmt(net)}</td>`;
+  }
+  salesRow += `<td class="strong">${fmt(inflows.reduce((a,b)=>a+b,0))}</td></tr>`;
+
+  let capexRow = '<tr><td>Kas keluar (capex)</td>';
+  const capexOut = [];
+  for(let i=0;i<tahun;i++){
+    const v = totalCapex*(cfState.capexPct[i]/100);
+    capexOut.push(v);
+    capexRow += `<td>${fmt(v)}</td>`;
+  }
+  capexRow += `<td class="strong">${fmt(capexOut.reduce((a,b)=>a+b,0))}</td></tr>`;
+
+  let opexRow = '<tr><td>Kas keluar (opex)</td>';
+  const opexPerYear = totalOpex/tahun;
+  for(let i=0;i<tahun;i++) opexRow += `<td>${fmt(opexPerYear)}</td>`;
+  opexRow += `<td class="strong">${fmt(totalOpex)}</td></tr>`;
+
+  let netRow = '<tr><td class="strong">Kas bersih per tahun</td>';
+  const netFlow = [];
+  for(let i=0;i<tahun;i++){
+    const n = inflows[i] - capexOut[i] - opexPerYear;
+    netFlow.push(n);
+    netRow += `<td class="strong ${n>=0?'accent-pos':'accent-neg'}">${fmt(n)}</td>`;
+  }
+  const netTotal = netFlow.reduce((a,b)=>a+b,0);
+  netRow += `<td class="strong ${netTotal>=0?'accent-pos':'accent-neg'}">${fmt(netTotal)}</td></tr>`;
+
+  let cumRow = '<tr><td class="strong">Kas kumulatif</td>';
+  let cum = 0; const cumArr=[];
+  for(let i=0;i<tahun;i++){ cum += netFlow[i]; cumArr.push(cum); cumRow += `<td class="strong ${cum>=0?'accent-pos':'accent-neg'}">${fmt(cum)}</td>`; }
+  cumRow += `<td></td></tr>`;
+
+  table.innerHTML = head + unitRow + capexPctRow + salesRow + capexRow + opexRow + netRow + cumRow;
+
+  drawChart(inflows, capexOut, opexPerYear, tahun);
+}
+
+function updateUnit(i, v){ cfState.unitPerTahun[i] = parseFloat(v)||0; calc(); }
+function updateCapexPct(i, v){ cfState.capexPct[i] = parseFloat(v)||0; calc(); }
+
+function drawChart(inflows, capexOut, opexPerYear, tahun){
+  const svg = document.getElementById('cfChart');
+  const W=1000,H=180,pad=30;
+  let cumIn=0, cumOut=0;
+  const inPts=[], outPts=[];
+  let maxVal = 1;
+  const inArr=[], outArr=[];
+  for(let i=0;i<tahun;i++){
+    cumIn += inflows[i];
+    cumOut += capexOut[i] + opexPerYear;
+    inArr.push(cumIn); outArr.push(cumOut);
+    maxVal = Math.max(maxVal, cumIn, cumOut);
+  }
+  const stepX = tahun>1 ? (W-2*pad)/(tahun-1) : 0;
+  function toXY(arr, idx){
+    const x = pad + stepX*idx;
+    const y = H-pad - (arr[idx]/maxVal)*(H-2*pad);
+    return [x,y];
+  }
+  for(let i=0;i<tahun;i++){ inPts.push(toXY(inArr,i)); outPts.push(toXY(outArr,i)); }
+  const inPath = inPts.map((p,i)=> (i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  const outPath = outPts.map((p,i)=> (i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  let dots = '';
+  inPts.forEach(p=> dots += `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#6FB8D1" />`);
+  outPts.forEach(p=> dots += `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#C97D3C" />`);
+  svg.innerHTML = `
+    <line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#C7BFA6" stroke-width="1"/>
+    <path d="${inPath}" fill="none" stroke="#6FB8D1" stroke-width="2.5"/>
+    <path d="${outPath}" fill="none" stroke="#C97D3C" stroke-width="2.5"/>
+    ${dots}
+  `;
+}
+
+document.querySelectorAll('input, select').forEach(el=>{
+  el.addEventListener('input', calc);
+});
+calc();
+</script>
+</body>
+</html>
