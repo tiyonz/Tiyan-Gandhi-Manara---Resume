@@ -1,0 +1,586 @@
+# Generate the html web page calculator using python and save it as index.html
+html_content = """<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summary Bisplan Property — Quick Feasibility Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #181C27;
+      --ink-soft: #242B39;
+      --paper: #F0EDE6;
+      --paper-dim: #E4DED2;
+      --brass: #C9A227;
+      --brass-soft: #E4C55E;
+      --teal: #3E6259;
+      --line: rgba(240, 237, 230, 0.14);
+      --line-dark: rgba(24, 28, 39, 0.12);
+      --text-dim: rgba(240, 237, 230, 0.68);
+      --accent-green: #2e7d32;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.5;
+      padding-bottom: 60px;
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+    header {
+      padding: 40px 0 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 32px;
+    }
+    .back-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--brass-soft);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: var(--paper);
+    }
+    p.subtitle {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+
+    /* Top KPI Dashboard */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .kpi-card {
+      background: var(--ink-soft);
+      border: 1px solid var(--line);
+      padding: 20px;
+      border-radius: 4px;
+      position: relative;
+    }
+    .kpi-card.highlight {
+      border-color: var(--brass);
+      background: rgba(201, 162, 39, 0.08);
+    }
+    .kpi-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--brass-soft);
+      margin-bottom: 8px;
+    }
+    .kpi-value {
+      font-family: 'Fraunces', serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: var(--paper);
+    }
+    .kpi-sub {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* Main Grid */
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    @media (max-width: 860px) {
+      .calc-layout { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--ink-soft);
+      border: 1px solid var(--line);
+      padding: 24px;
+      border-radius: 4px;
+    }
+    .panel-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      color: var(--brass);
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .panel-title span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      font-weight: normal;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--paper);
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    input[type="number"], select {
+      width: 100%;
+      background: var(--ink);
+      border: 1px solid var(--line);
+      color: var(--paper);
+      padding: 10px 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.95rem;
+      border-radius: 3px;
+    }
+    input[type="number"]:focus, select:focus {
+      outline: 1px solid var(--brass);
+      border-color: var(--brass);
+    }
+    .unit-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    /* Result Breakdown Table */
+    .table-breakdown {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .table-breakdown th, .table-breakdown td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+    .table-breakdown th {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--brass-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .table-breakdown tr.total-row {
+      font-weight: 600;
+      background: rgba(240, 237, 230, 0.05);
+      border-top: 1px solid var(--brass);
+    }
+    .table-breakdown td.num {
+      text-align: right;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Preset Buttons */
+    .presets {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .preset-btn {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--paper);
+      padding: 8px 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.2s;
+    }
+    .preset-btn:hover, .preset-btn.active {
+      border-color: var(--brass);
+      background: var(--brass);
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Locked Feature / CTA Banner */
+    .cta-banner {
+      margin-top: 36px;
+      background: linear-gradient(135deg, rgba(62,98,89,0.2), rgba(201,162,39,0.1));
+      border: 1px solid var(--brass);
+      padding: 28px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .cta-text h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+      color: var(--brass-soft);
+    }
+    .cta-text p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      max-width: 650px;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--brass);
+      color: var(--ink);
+      padding: 12px 22px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      border-radius: 4px;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .cta-btn:hover {
+      background: var(--brass-soft);
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a href="../" class="back-link">← Kembali ke Portfolio</a>
+    <h1>Quick Property Feasibility Calculator</h1>
+    <p class="subtitle">Simulasi ringkas perhitungan Harga Pokok Produksi (HPP), Capex, Opex, Potongan Penjualan, & Margin Kelayakan Properti.</p>
+  </header>
+
+  <!-- PRESETS SWITCHER -->
+  <div style="margin-bottom: 12px; font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--brass-soft);">SKENARIO HARGA JUAL (PRESET EXCEL):</div>
+  <div class="presets">
+    <button class="preset-btn active" id="btn-opsi1" onclick="loadOption(1)">Opsi 1 (Rp 1.15 M / Unit)</button>
+    <button class="preset-btn" id="btn-opsi2" onclick="loadOption(2)">Opsi 2 (Rp 1.25 M / Unit)</button>
+  </div>
+
+  <!-- KPI SUMMARY DASHBOARD -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Penjualan</div>
+      <div class="kpi-value" id="kpi-revenue">Rp 0</div>
+      <div class="kpi-sub" id="kpi-revenue-sub">72 Unit × Harga Jual</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total HPP & Pengeluaran</div>
+      <div class="kpi-value" id="kpi-cost">Rp 0</div>
+      <div class="kpi-sub">Capex + Opex + Pot. Penjualan</div>
+    </div>
+    <div class="kpi-card highlight">
+      <div class="kpi-label">Estimasi Profit Bersih</div>
+      <div class="kpi-value" id="kpi-profit" style="color:var(--brass-soft);">Rp 0</div>
+      <div class="kpi-sub" id="kpi-profit-sub">Per Unit: Rp 0</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Nett Profit Margin</div>
+      <div class="kpi-value" id="kpi-margin">0.0 %</div>
+      <div class="kpi-sub">Rasio Laba terhadap Omzet</div>
+    </div>
+  </div>
+
+  <!-- INPUT & BREAKDOWN -->
+  <div class="calc-layout">
+    
+    <!-- LEFT PANEL: INPUT PARAMETERS -->
+    <div class="panel">
+      <div class="panel-title">
+        Parameter Input
+        <span>Dapat Disesuaikan</span>
+      </div>
+
+      <div style="font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--brass-soft); margin-bottom:12px; text-transform:uppercase;">1. Parameter Site & Unit</div>
+      
+      <div class="form-group">
+        <label>Luas Lahan Total</label>
+        <div class="input-row">
+          <input type="number" id="inp_luas_lahan" value="9000" oninput="calculate()">
+          <span class="unit-tag">m²</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Koefisien Dasar Bangunan (KDB)</label>
+        <div class="input-row">
+          <input type="number" id="inp_kdb" value="0.6" step="0.05" oninput="calculate()">
+          <span class="unit-tag">Rasio</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Jumlah Unit & Tipe</label>
+        <div class="input-row">
+          <input type="number" id="inp_unit" value="72" oninput="calculate()">
+          <span class="unit-tag">Unit (Tipe 50/72)</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Harga Jual Unit (Exc PPN)</label>
+        <div class="input-row">
+          <input type="number" id="inp_harga_jual" value="1150000000" step="10000000" oninput="calculate()">
+          <span class="unit-tag">Rp / Unit</span>
+        </div>
+      </div>
+
+      <div style="font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--brass-soft); margin-top:24px; margin-bottom:12px; text-transform:uppercase;">2. Parameter Biaya & Konstruksi</div>
+
+      <div class="form-group">
+        <label>Biaya Akuisisi Lahan Total</label>
+        <div class="input-row">
+          <input type="number" id="inp_akuisisi" value="49337000000" step="100000000" oninput="calculate()">
+          <span class="unit-tag">Rp</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>HPP Konstruksi Bangunan per m²</label>
+        <div class="input-row">
+          <input type="number" id="inp_hpp_bangunan_m2" value="3800000" step="100000" oninput="calculate()">
+          <span class="unit-tag">Rp / m²</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Perizinan, Legalitas & Persiapan</label>
+        <div class="input-row">
+          <input type="number" id="inp_ijin_prep" value="1252000000" step="10000000" oninput="calculate()">
+          <span class="unit-tag">Rp</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Infrastruktur, Fasum & Fasos</label>
+        <div class="input-row">
+          <input type="number" id="inp_infra" value="1600000000" step="10000000" oninput="calculate()">
+          <span class="unit-tag">Rp</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Biaya Opex (Admin, SDM, Marketing Base)</label>
+        <div class="input-row">
+          <input type="number" id="inp_opex" value="1960400000" step="10000000" oninput="calculate()">
+          <span class="unit-tag">Rp</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: DETAILED BREAKDOWN -->
+    <div class="panel">
+      <div class="panel-title">
+        Rincian HPP & Potongan
+        <span>Hasil Kalkulasi Logika</span>
+      </div>
+
+      <table class="table-breakdown">
+        <thead>
+          <tr>
+            <th>Komponen Struktural</th>
+            <th style="text-align:right;">Per Unit (Rp)</th>
+            <th style="text-align:right;">Total (Rp)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Capex Lahan & Infras (per m²)</td>
+            <td class="num" id="tb_capex_unit">-</td>
+            <td class="num" id="tb_capex_total">-</td>
+          </tr>
+          <tr>
+            <td>Biaya Opex Operasional</td>
+            <td class="num" id="tb_opex_unit">-</td>
+            <td class="num" id="tb_opex_total">-</td>
+          </tr>
+          <tr>
+            <td>Fee Sales Marketing (4%)</td>
+            <td class="num" id="tb_fee_unit">-</td>
+            <td class="num" id="tb_fee_total">-</td>
+          </tr>
+          <tr>
+            <td>AJB & Balik Nama (2%)</td>
+            <td class="num" id="tb_ajb_unit">-</td>
+            <td class="num" id="tb_ajb_total">-</td>
+          </tr>
+          <tr>
+            <td>PPh Penjualan (2.5%)</td>
+            <td class="num" id="tb_pph_unit">-</td>
+            <td class="num" id="tb_pph_total">-</td>
+          </tr>
+          <tr style="background: rgba(201,162,39,0.06);">
+            <td><strong>Pembentukan HPP Tanah / m²</strong></td>
+            <td class="num" colspan="2" id="tb_hpp_tanah_m2" style="color:var(--brass-soft); font-weight:600;">-</td>
+          </tr>
+          <tr>
+            <td>HPP Tanah Per Unit (72m²)</td>
+            <td class="num" id="tb_hpp_tanah_unit">-</td>
+            <td class="num" id="tb_hpp_tanah_total">-</td>
+          </tr>
+          <tr>
+            <td>HPP Bangunan Per Unit (50m²)</td>
+            <td class="num" id="tb_hpp_bgn_unit">-</td>
+            <td class="num" id="tb_hpp_bgn_total">-</td>
+          </tr>
+          <tr class="total-row">
+            <td><strong>TOTAL HPP UNIT</strong></td>
+            <td class="num" id="tb_total_hpp_unit" style="color:var(--brass);">-</td>
+            <td class="num" id="tb_total_hpp_total" style="color:var(--brass);">-</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top: 24px; padding: 16px; background: rgba(0,0,0,0.2); border-radius: 4px; font-size: 0.85rem; color: var(--text-dim);">
+        <strong style="color:var(--paper); display:block; margin-bottom:4px;">Metode Formula Excel:</strong>
+        HPP Tanah dibentuk dari alokasi Capex Lahan/Infras + Opex + Potongan Penjualan dibagi Sellable Area (5.184 m²). HPP Bangunan dihitung Rp 3.8M/m² × 50m² = Rp 190 Juta/Unit.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CALL TO ACTION / CONSULTATION BANNER -->
+  <div class="cta-banner">
+    <div class="cta-text">
+      <h3>Butuh Proyeksi Cashflow & Analisis Sensitivitas Keuangan Lengkap?</h3>
+      <p>Kalkulator ini menyajikan ringkasan kelayakan makro. Untuk analisis bisnis komprehensif mencakup jadwal arus kas bulanan/tahunan, skema kerjasama pemilik tanah, dan simulasi risiko inflasi, silakan hubungi saya.</p>
+    </div>
+    <a href="mailto:tiyangandhi.bisnis@gmail.com?subject=Konsultasi%20Feasibility%20Study%20Properti" class="cta-btn">Hubungi Tiyan Gandhi →</a>
+  </div>
+</div>
+
+<script>
+  function formatIDR(num) {
+    return 'Rp ' + Math.round(num).toLocaleString('id-ID');
+  }
+
+  function calculate() {
+    // Inputs
+    const luasLahan = parseFloat(document.getElementById('inp_luas_lahan').value) || 0;
+    const kdb = parseFloat(document.getElementById('inp_kdb').value) || 0;
+    const unit = parseFloat(document.getElementById('inp_unit').value) || 0;
+    const hargaJual = parseFloat(document.getElementById('inp_harga_jual').value) || 0;
+    const akuisisi = parseFloat(document.getElementById('inp_akuisisi').value) || 0;
+    const hppBangunanM2 = parseFloat(document.getElementById('inp_hpp_bangunan_m2').value) || 0;
+    const ijinPrep = parseFloat(document.getElementById('inp_ijin_prep').value) || 0;
+    const infra = parseFloat(document.getElementById('inp_infra').value) || 0;
+    const opex = parseFloat(document.getElementById('inp_opex').value) || 0;
+
+    // Fixed / Derived Constants from Excel
+    const luasBangunanUnit = 50; // m2
+    const luasTanahUnit = 72; // m2
+    const sellableArea = unit * luasTanahUnit; // 5184 m2 for 72 units
+
+    // Capex Total
+    const totalCapex = akuisisi + ijinPrep + infra; // 52.189.000.000
+    const capexPerM2 = sellableArea > 0 ? totalCapex / sellableArea : 0;
+
+    // Potongan Penjualan per unit
+    const feeSalesUnit = hargaJual * 0.04;
+    const ajbUnit = hargaJual * 0.02;
+    const pphUnit = hargaJual * 0.025;
+    const totalPotUnit = feeSalesUnit + ajbUnit + pphUnit; // 9.775%
+    const potPerM2 = luasTanahUnit > 0 ? totalPotUnit / luasTanahUnit : 0;
+
+    // Opex per m2
+    const opexPerM2 = sellableArea > 0 ? opex / sellableArea : 0;
+    const opexPerUnit = unit > 0 ? opex / unit : 0;
+
+    // HPP Tanah Pembentukan per m2
+    const hppTanahM2 = capexPerM2 + opexPerM2 + potPerM2;
+    const hppTanahPerUnit = hppTanahM2 * luasTanahUnit;
+
+    // HPP Bangunan Per Unit
+    const hppBangunanPerUnit = hppBangunanM2 * luasBangunanUnit; // 190.000.000
+
+    // Total HPP Per Unit
+    const totalHppPerUnit = hppTanahPerUnit + hppBangunanPerUnit;
+
+    // Overall Totals
+    const totalPenjualan = unit * hargaJual;
+    const totalPotPenjualan = totalPotUnit * unit;
+    const totalHppBangunan = hppBangunanPerUnit * unit;
+    
+    // Total Pengeluaran = Capex + Opex + Total Pot Penjualan + Total HPP Bangunan
+    const totalPengeluaran = totalCapex + opex + totalPotPenjualan + totalHppBangunan;
+    const totalProfit = totalPenjualan - totalPengeluaran;
+    const profitMargin = totalPenjualan > 0 ? (totalProfit / totalPenjualan) * 100 : 0;
+    const profitPerUnit = unit > 0 ? totalProfit / unit : 0;
+
+    // Update KPI Dashboard
+    document.getElementById('kpi-revenue').innerText = formatIDR(totalPenjualan);
+    document.getElementById('kpi-revenue-sub').innerText = `${unit} Unit × ${formatIDR(hargaJual)}`;
+    document.getElementById('kpi-cost').innerText = formatIDR(totalPengeluaran);
+    document.getElementById('kpi-profit').innerText = formatIDR(totalProfit);
+    document.getElementById('kpi-profit-sub').innerText = `Per Unit: ${formatIDR(profitPerUnit)}`;
+    document.getElementById('kpi-margin').innerText = profitMargin.toFixed(2) + ' %';
+
+    // Update Table Breakdown
+    document.getElementById('tb_capex_unit').innerText = formatIDR(totalCapex / unit);
+    document.getElementById('tb_capex_total').innerText = formatIDR(totalCapex);
+    document.getElementById('tb_opex_unit').innerText = formatIDR(opexPerUnit);
+    document.getElementById('tb_opex_total').innerText = formatIDR(opex);
+    document.getElementById('tb_fee_unit').innerText = formatIDR(feeSalesUnit);
+    document.getElementById('tb_fee_total').innerText = formatIDR(feeSalesUnit * unit);
+    document.getElementById('tb_ajb_unit').innerText = formatIDR(ajbUnit);
+    document.getElementById('tb_ajb_total').innerText = formatIDR(ajbUnit * unit);
+    document.getElementById('tb_pph_unit').innerText = formatIDR(pphUnit);
+    document.getElementById('tb_pph_total').innerText = formatIDR(pphUnit * unit);
+
+    document.getElementById('tb_hpp_tanah_m2').innerText = formatIDR(hppTanahM2) + ' / m²';
+    document.getElementById('tb_hpp_tanah_unit').innerText = formatIDR(hppTanahPerUnit);
+    document.getElementById('tb_hpp_tanah_total').innerText = formatIDR(hppTanahPerUnit * unit);
+
+    document.getElementById('tb_hpp_bgn_unit').innerText = formatIDR(hppBangunanPerUnit);
+    document.getElementById('tb_hpp_bgn_total').innerText = formatIDR(totalHppBangunan);
+
+    document.getElementById('tb_total_hpp_unit').innerText = formatIDR(totalHppPerUnit);
+    document.getElementById('tb_total_hpp_total').innerText = formatIDR(totalHppPerUnit * unit);
+  }
+
+  function loadOption(opsi) {
+    document.getElementById('btn-opsi1').classList.remove('active');
+    document.getElementById('btn-opsi2').classList.remove('active');
+
+    if (opsi === 1) {
+      document.getElementById('btn-opsi1').classList.add('active');
+      document.getElementById('inp_harga_jual').value = 1150000000;
+    } else {
+      document.getElementById('btn-opsi2').classList.add('active');
+      document.getElementById('inp_harga_jual').value = 1250000000;
+    }
+    calculate();
+  }
+
+  // Initialize on load
+  calculate();
+</script>
+</body>
+</html>
+"""
+
+with open('index.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print("Generated index.html successfully.")
