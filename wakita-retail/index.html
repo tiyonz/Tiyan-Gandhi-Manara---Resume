@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard & Kalkulator Interaktif Business Plan Trading & Retail Sembako</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed pb-12">
+
+    <!-- Header & Title -->
+    <header class="bg-indigo-900 text-white py-8 px-4 shadow-lg mb-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold">Business Plan Financial Dashboard</h1>
+                <p class="text-indigo-200 text-sm mt-1">Model Bisnis: Retail Outlet & Trading Sembako (B2B Paket)</p>
+            </div>
+            <div class="bg-indigo-800 px-4 py-2 rounded-lg border border-indigo-700 text-xs text-indigo-100">
+                Interactive GitHub Web App
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 space-y-8">
+
+        <!-- Control Panel (Dynamic Input) -->
+        <section class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-1">
+                    <h2 class="text-lg font-bold text-slate-900">Simulasi Parameter Gerai</h2>
+                    <p class="text-sm text-slate-500">Ubah jumlah gerai di bawah ini untuk melihat proyeksi finansial otomatis.</p>
+                </div>
+                <div class="flex items-center gap-4 bg-indigo-50 p-4 rounded-xl border border-indigo-100 w-full md:w-auto">
+                    <label for="inputGerai" class="font-bold text-indigo-900 whitespace-nowrap">Jumlah Gerai:</label>
+                    <input type="number" id="inputGerai" value="5" min="1" max="100" oninput="calculateAll()"
+                           class="w-24 text-center font-bold text-xl py-2 px-3 border-2 border-indigo-400 rounded-lg focus:outline-none focus:border-indigo-600 bg-white">
+                    <span class="text-sm font-semibold text-indigo-700">Unit</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPI Summary Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Sales Bulanan</p>
+                <h3 id="cardSales" class="text-xl font-extrabold text-indigo-600 mt-2">Rp 0</h3>
+                <p class="text-xs text-slate-500 mt-1">Retail + Trading Sembako</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Net Profit Bulanan</p>
+                <h3 id="cardNetProfit" class="text-xl font-extrabold text-emerald-600 mt-2">Rp 0</h3>
+                <p class="text-xs text-slate-500 mt-1">Seteah Operasional DC & Gerai</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Investasi (Capex)</p>
+                <h3 id="cardCapex" class="text-xl font-extrabold text-amber-600 mt-2">Rp 0</h3>
+                <p class="text-xs text-slate-500 mt-1">Sewa, Peralatan, & Stok Awal</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Payback Period</p>
+                <h3 id="cardPayback" class="text-xl font-extrabold text-blue-600 mt-2">0 Bulan</h3>
+                <p id="cardPaybackYear" class="text-xs text-slate-500 mt-1">~ 0 Tahun</p>
+            </div>
+        </section>
+
+        <!-- Financial Detail Sections -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- 1. Parameter Variable Cost Distribution Center (DC) -->
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-md font-bold text-slate-800 border-b pb-3 mb-4 flex justify-between items-center">
+                    <span>Parameter Variable Cost DC</span>
+                    <span class="text-xs font-normal text-slate-500">(Beban Sesuai Skala Gerai)</span>
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-50 text-slate-600 uppercase text-xs">
+                            <tr>
+                                <th class="p-2">Pos Biaya</th>
+                                <th class="p-2 text-center">Qty / SDM</th>
+                                <th class="p-2 text-right">Biaya Bulanan</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr><td class="p-2">Gaji Purchasing, Gudang, Admin</td><td class="p-2 text-center">3 Org</td><td class="p-2 text-right font-semibold">Rp 10.500.000</td></tr>
+                            <tr><td class="p-2">Outsourcing Packing</td><td id="dcPackerCount" class="p-2 text-center">10 Org</td><td id="dcPackerCost" class="p-2 text-right font-semibold">Rp 0</td></tr>
+                            <tr><td class="p-2">Driver Logistik</td><td id="dcDriverCount" class="p-2 text-center">2 Org</td><td id="dcDriverCost" class="p-2 text-right font-semibold">Rp 0</td></tr>
+                            <tr><td class="p-2">Sewa Gudang DC (Pro Rata Bulanan)</td><td class="p-2 text-center">1 Gudang</td><td class="p-2 text-right font-semibold">Rp 6.250.000</td></tr>
+                            <tr><td class="p-2">Listrik, BBM & Operasional DC</td><td class="p-2 text-center">Ops</td><td class="p-2 text-right font-semibold">Rp 4.000.000</td></tr>
+                            <tr class="bg-slate-50 font-bold"><td class="p-2">Total Fixed/Var Cost DC</td><td class="p-2"></td><td id="dcTotalCost" class="p-2 text-right text-indigo-600">Rp 0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 2. Rincian Capex & Modal Kerja -->
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-md font-bold text-slate-800 border-b pb-3 mb-4">Proyeksi Investasi (Capex & Working Capital)</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-50 text-slate-600 uppercase text-xs">
+                            <tr>
+                                <th class="p-2">Komponen Investasi</th>
+                                <th class="p-2 text-right">Per Gerai</th>
+                                <th class="p-2 text-right">Total (<span class="valGerai">5</span> Gerai)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr><td class="p-2">Sewa Tempat Gerai</td><td class="p-2 text-right">Rp 9.600.000</td><td id="capexSewa" class="p-2 text-right font-semibold">Rp 0</td></tr>
+                            <tr><td class="p-2">Renovasi Outlet & Branding</td><td class="p-2 text-right">Rp 100.000.000</td><td id="capexRenov" class="p-2 text-right font-semibold">Rp 0</td></tr>
+                            <tr><td class="p-2">Equipment & Display Store</td><td class="p-2 text-right">Rp 50.000.000</td><td id="capexEquip" class="p-2 text-right font-semibold">Rp 0</td></tr>
+                            <tr><td class="p-2">Stok Modal Kerja (Retail & Paket)</td><td class="p-2 text-right">Rp 305.625.000</td><td id="capexStok" class="p-2 text-right font-semibold">Rp 0</td></tr>
+                            <tr><td class="p-2">Biaya Promosi & Pra-Ops</td><td class="p-2 text-right">Rp 10.000.000</td><td id="capexPromosi" class="p-2 text-right font-semibold">Rp 0</td></tr>
+                            <tr class="bg-amber-50 font-bold text-amber-900"><td class="p-2">Total Kebutuhan Investment</td><td class="p-2"></td><td id="capexTotal" class="p-2 text-right">Rp 0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- 3. Dynamic PnL Statement (Laba Rugi Bulanan) -->
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h2 class="text-md font-bold text-slate-800 border-b pb-3 mb-4">Simulasi Proyeksi Laba Rugi (PnL Bulanan)</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-slate-100 text-slate-700 font-bold text-xs">
+                        <tr>
+                            <th class="p-3">Kategori</th>
+                            <th class="p-3 text-right">Model 1: Retail Outlet</th>
+                            <th class="p-3 text-right">Model 2: Trading Paket Sembako</th>
+                            <th class="p-3 text-right">Consolidated Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr>
+                            <td class="p-3 font-semibold">Penjualan Kotor (Sales)</td>
+                            <td id="pnlSalesRetail" class="p-3 text-right">Rp 0</td>
+                            <td id="pnlSalesTrading" class="p-3 text-right">Rp 0</td>
+                            <td id="pnlSalesTotal" class="p-3 text-right font-bold text-indigo-600">Rp 0</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 text-slate-500">Potongan Sales / Fee Base</td>
+                            <td id="pnlFeeRetail" class="p-3 text-right text-red-500">Rp 0</td>
+                            <td id="pnlFeeTrading" class="p-3 text-right text-red-500">Rp 0</td>
+                            <td id="pnlFeeTotal" class="p-3 text-right text-red-500 font-semibold">Rp 0</td>
+                        </tr>
+                        <tr class="bg-slate-50 font-semibold">
+                            <td class="p-3">Net Sales</td>
+                            <td id="pnlNetSalesRetail" class="p-3 text-right">Rp 0</td>
+                            <td id="pnlNetSalesTrading" class="p-3 text-right">Rp 0</td>
+                            <td id="pnlNetSalesTotal" class="p-3 text-right">Rp 0</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 text-slate-500">HPP / Biaya Bahan Baku (~85.8%)</td>
+                            <td id="pnlHppRetail" class="p-3 text-right text-slate-600">Rp 0</td>
+                            <td id="pnlHppTrading" class="p-3 text-right text-slate-600">Rp 0</td>
+                            <td id="pnlHppTotal" class="p-3 text-right text-slate-600">Rp 0</td>
+                        </tr>
+                        <tr class="bg-indigo-50 font-bold text-indigo-950">
+                            <td class="p-3">Gross Margin (~14.1%)</td>
+                            <td id="pnlMarginRetail" class="p-3 text-right">Rp 0</td>
+                            <td id="pnlMarginTrading" class="p-3 text-right">Rp 0</td>
+                            <td id="pnlMarginTotal" class="p-3 text-right">Rp 0</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 text-slate-500">Fixed Cost Outlet & Operasional DC</td>
+                            <td id="pnlFcRetail" class="p-3 text-right text-slate-600">Rp 0</td>
+                            <td id="pnlFcTrading" class="p-3 text-right text-slate-600">Rp 0</td>
+                            <td id="pnlFcTotal" class="p-3 text-right text-slate-600">Rp 0</td>
+                        </tr>
+                        <tr class="bg-emerald-100 font-extrabold text-emerald-900 text-base">
+                            <td class="p-3">NET MARGIN (PROFIT BERSIH)</td>
+                            <td id="pnlNetMarginRetail" class="p-3 text-right">Rp 0</td>
+                            <td id="pnlNetMarginTrading" class="p-3 text-right">Rp 0</td>
+                            <td id="pnlNetMarginTotal" class="p-3 text-right">Rp 0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 4. Cash Flow Summary (Per 4 Bulan / Kuartalan) -->
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h2 class="text-md font-bold text-slate-800 border-b pb-3 mb-4 flex justify-between items-center">
+                <span>Ringkasan Proyeksi Cash Flow (Per 4 Bulan)</span>
+                <span class="text-xs font-normal text-slate-500">Ekspansi Bertahap</span>
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left border-collapse">
+                    <thead class="bg-slate-100 text-slate-700 text-xs uppercase">
+                        <tr>
+                            <th class="p-3 border border-slate-200">Arus Kas</th>
+                            <th class="p-3 border border-slate-200 text-right">Kuartal 1 (Bln 1-4)</th>
+                            <th class="p-3 border border-slate-200 text-right">Kuartal 2 (Bln 5-8)</th>
+                            <th class="p-3 border border-slate-200 text-right">Kuartal 3 (Bln 9-12)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr>
+                            <td class="p-3 border border-slate-200 font-semibold">Cash Inflow (Sales Cumulated)</td>
+                            <td id="cfInQ1" class="p-3 border border-slate-200 text-right">Rp 0</td>
+                            <td id="cfInQ2" class="p-3 border border-slate-200 text-right">Rp 0</td>
+                            <td id="cfInQ3" class="p-3 border border-slate-200 text-right">Rp 0</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 border border-slate-200 text-slate-500">Cash Outflow (HPP, Opex & Capex)</td>
+                            <td id="cfOutQ1" class="p-3 border border-slate-200 text-right text-red-500">Rp 0</td>
+                            <td id="cfOutQ2" class="p-3 border border-slate-200 text-right text-red-500">Rp 0</td>
+                            <td id="cfOutQ3" class="p-3 border border-slate-200 text-right text-red-500">Rp 0</td>
+                        </tr>
+                        <tr class="bg-slate-50 font-bold">
+                            <td class="p-3 border border-slate-200">Surplus / Defisit Operasional</td>
+                            <td id="cfNetQ1" class="p-3 border border-slate-200 text-right">Rp 0</td>
+                            <td id="cfNetQ2" class="p-3 border border-slate-200 text-right">Rp 0</td>
+                            <td id="cfNetQ3" class="p-3 border border-slate-200 text-right">Rp 0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Calculation Engine -->
+    <script>
+        function formatRupiah(val) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
+        }
+
+        function calculateAll() {
+            let n = parseInt(document.getElementById('inputGerai').value);
+            if (isNaN(n) || n < 1) n = 1;
+
+            // Update label gerai
+            document.querySelectorAll('.valGerai').forEach(el => el.innerText = n);
+
+            // 1. Parameter Biaya DC
+            let packingCost = 85000 * 10 * 30 * (n / 5);
+            let driverCost = 85000 * 2 * 30 * (n / 5);
+            let totalDcCost = 10500000 + packingCost + driverCost + 6250000 + 4000000;
+
+            document.getElementById('dcPackerCount').innerText = (10 * (n / 5)).toFixed(0) + " Org";
+            document.getElementById('dcPackerCost').innerText = formatRupiah(packingCost);
+            document.getElementById('dcDriverCount').innerText = (2 * (n / 5)).toFixed(0) + " Org";
+            document.getElementById('dcDriverCost').innerText = formatRupiah(driverCost);
+            document.getElementById('dcTotalCost').innerText = formatRupiah(totalDcCost);
+
+            // 2. Proyeksi Investment (Capex)
+            let sewa = 9600000 * n;
+            let renov = 100000000 * n;
+            let equip = 50000000 * n;
+            let stok = 305625000 * n;
+            let promosi = 10000000 * n;
+            let totalCapex = sewa + renov + equip + stok + promosi;
+
+            document.getElementById('capexSewa').innerText = formatRupiah(sewa);
+            document.getElementById('capexRenov').innerText = formatRupiah(renov);
+            document.getElementById('capexEquip').innerText = formatRupiah(equip);
+            document.getElementById('capexStok').innerText = formatRupiah(stok);
+            document.getElementById('capexPromosi').innerText = formatRupiah(promosi);
+            document.getElementById('capexTotal').innerText = formatRupiah(totalCapex);
+
+            // 3. PnL Model Calculations (Pro Rata per gerai)
+            let salesRetail = 60000000 * n;
+            let salesTrading = 312500000 * n;
+            let salesTotal = salesRetail + salesTrading;
+
+            let feeRetail = 600000 * n;
+            let feeTrading = 3125000 * n;
+            let feeTotal = feeRetail + feeTrading;
+
+            let netSalesRetail = salesRetail - feeRetail;
+            let netSalesTrading = salesTrading - feeTrading;
+            let netSalesTotal = salesTotal - feeTotal;
+
+            let hppRetail = 51000000 * n;
+            let hppTrading = 265625000 * n;
+            let hppTotal = hppRetail + hppTrading;
+
+            let marginRetail = netSalesRetail - hppRetail;
+            let marginTrading = netSalesTrading - hppTrading;
+            let marginTotal = netSalesTotal - hppTotal;
+
+            let fcRetail = 3549127 * n;
+            let fcTrading = 18485039 * (n / 5);
+            let fcTotal = fcRetail + fcTrading + totalDcCost;
+
+            let netMarginRetail = marginRetail - fcRetail;
+            let netMarginTrading = marginTrading - (fcTrading + totalDcCost);
+            let netMarginTotal = marginTotal - fcTotal;
+
+            // Update PnL HTML
+            document.getElementById('pnlSalesRetail').innerText = formatRupiah(salesRetail);
+            document.getElementById('pnlSalesTrading').innerText = formatRupiah(salesTrading);
+            document.getElementById('pnlSalesTotal').innerText = formatRupiah(salesTotal);
+
+            document.getElementById('pnlFeeRetail').innerText = formatRupiah(feeRetail);
+            document.getElementById('pnlFeeTrading').innerText = formatRupiah(feeTrading);
+            document.getElementById('pnlFeeTotal').innerText = formatRupiah(feeTotal);
+
+            document.getElementById('pnlNetSalesRetail').innerText = formatRupiah(netSalesRetail);
+            document.getElementById('pnlNetSalesTrading').innerText = formatRupiah(netSalesTrading);
+            document.getElementById('pnlNetSalesTotal').innerText = formatRupiah(netSalesTotal);
+
+            document.getElementById('pnlHppRetail').innerText = formatRupiah(hppRetail);
+            document.getElementById('pnlHppTrading').innerText = formatRupiah(hppTrading);
+            document.getElementById('pnlHppTotal').innerText = formatRupiah(hppTotal);
+
+            document.getElementById('pnlMarginRetail').innerText = formatRupiah(marginRetail);
+            document.getElementById('pnlMarginTrading').innerText = formatRupiah(marginTrading);
+            document.getElementById('pnlMarginTotal').innerText = formatRupiah(marginTotal);
+
+            document.getElementById('pnlFcRetail').innerText = formatRupiah(fcRetail);
+            document.getElementById('pnlFcTrading').innerText = formatRupiah(fcTrading);
+            document.getElementById('pnlFcTotal').innerText = formatRupiah(fcTotal);
+
+            document.getElementById('pnlNetMarginRetail').innerText = formatRupiah(netMarginRetail);
+            document.getElementById('pnlNetMarginTrading').innerText = formatRupiah(netMarginTrading);
+            document.getElementById('pnlNetMarginTotal').innerText = formatRupiah(netMarginTotal);
+
+            // KPI Cards Update
+            document.getElementById('cardSales').innerText = formatRupiah(salesTotal);
+            document.getElementById('cardNetProfit').innerText = formatRupiah(netMarginTotal);
+            document.getElementById('cardCapex').innerText = formatRupiah(totalCapex);
+
+            let paybackMonths = netMarginTotal > 0 ? (totalCapex / netMarginTotal) : 0;
+            document.getElementById('cardPayback').innerText = paybackMonths.toFixed(1) + " Bulan";
+            document.getElementById('cardPaybackYear').innerText = "~ " + (paybackMonths / 12).toFixed(1) + " Tahun";
+
+            // 4. Cash Flow Per 4 Bulan (Q1 - Q3 Projections)
+            let q1In = salesTotal * 4 * 0.6; 
+            let q1Out = (hppTotal + fcTotal) * 4 * 0.6 + (totalCapex * 0.5);
+            let q1Net = q1In - q1Out;
+
+            let q2In = salesTotal * 4 * 0.85;
+            let q2Out = (hppTotal + fcTotal) * 4 * 0.85 + (totalCapex * 0.3);
+            let q2Net = q2In - q2Out;
+
+            let q3In = salesTotal * 4;
+            let q3Out = (hppTotal + fcTotal) * 4 + (totalCapex * 0.2);
+            let q3Net = q3In - q3Out;
+
+            document.getElementById('cfInQ1').innerText = formatRupiah(q1In);
+            document.getElementById('cfOutQ1').innerText = formatRupiah(q1Out);
+            document.getElementById('cfNetQ1').innerText = formatRupiah(q1Net);
+
+            document.getElementById('cfInQ2').innerText = formatRupiah(q2In);
+            document.getElementById('cfOutQ2').innerText = formatRupiah(q2Out);
+            document.getElementById('cfNetQ2').innerText = formatRupiah(q2Net);
+
+            document.getElementById('cfInQ3').innerText = formatRupiah(q3In);
+            document.getElementById('cfOutQ3').innerText = formatRupiah(q3Out);
+            document.getElementById('cfNetQ3').innerText = formatRupiah(q3Net);
+        }
+
+        // Initialize calculations on page load
+        window.onload = calculateAll;
+    </script>
+</body>
+</html>
