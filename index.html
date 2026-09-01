@@ -161,6 +161,32 @@
     .project ul { list-style:none; display:flex; flex-direction:column; gap:7px; }
     .project li { color:rgba(240,237,230,.83); font-size:.9rem; padding-left:15px; position:relative; }
     .project li::before { content:"•"; color:var(--brass); position:absolute; left:0; }
+    
+    /* Tampilan Button untuk Link Model/Project */
+    .project-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px; /* Memberi jarak enter dari list di atasnya */
+      padding: 8px 16px;
+      background-color: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    
+    /* Efek Hover saat kursor diarahkan ke button */
+    .project-link-btn:hover {
+      background-color: #ffffff;
+      color: #0d0d0d;
+      border-color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+    }
 
     /* Skills */
     .skills-band { background:var(--paper); color:var(--ink); padding:68px 0; }
@@ -346,7 +372,7 @@
       <h2>Key Financial Models & Feasibility Studies</h2>
       <span class="section-num">04 / CORE WORK OUTPUTS</span>
     </div>
-    <p class="section-desc" style="margin-bottom: 24px; opacity: 0.8;">
+    <p class="section-desc" style="margin-bottom: 28px; opacity: 0.8;">
       Selected financial models and business plans engineered during my tenure as Business Development to evaluate corporate holding investments, subsidiary expansions, and feasibility assessments.
     </p>
     
@@ -361,9 +387,11 @@
           <li>Integrated cost structure modeling across land permits, legalities, infrastructure, and building construction.</li>
           <li>Dynamic Profit & Loss and cashflow schedule based on adjustable sales velocity assumptions.</li>
         </ul>
-        <a href="https://tiyonz.github.io/Tiyan-Gandhi-Manara---Resume/calculator/" class="project-link" target="_blank" rel="noopener">
-          View Interactive Model →
-        </a>
+        <div>
+          <a href="https://tiyonz.github.io/Tiyan-Gandhi-Manara---Resume/calculator/" class="project-link-btn" target="_blank" rel="noopener">
+            View Interactive Model →
+          </a>
+        </div>
       </article>
 
       <!-- CARD 2: QUICK PROPERTY FEASIBILITY SUMMARY -->
@@ -375,9 +403,11 @@
           <li>Modeled land HPP formation per m² derived from Capex, Opex, and sales deductions (Sales Fee 4%, Legal 2%, Tax 2.5%).</li>
           <li>Features instant pricing preset simulations to evaluate net profit sensitivity and profit margins.</li>
         </ul>
-        <a href="https://tiyonz.github.io/Tiyan-Gandhi-Manara---Resume/property-summary/" class="project-link" target="_blank" rel="noopener">
-          View Interactive Model →
-        </a>
+        <div>
+          <a href="https://tiyonz.github.io/Tiyan-Gandhi-Manara---Resume/property-summary/" class="project-link-btn" target="_blank" rel="noopener">
+            View Interactive Model →
+          </a>
+        </div>
       </article>
 
       <!-- CARD 3: AGRO-INDUSTRY FEASIBILITY (SENTRA AREN) -->
@@ -389,9 +419,11 @@
           <li>Modeled processing plant capacity, variable production dynamics, and B2B/B2C commercial pricing structures.</li>
           <li>Evaluated Break-Even Point (BEP) metrics and long-term sustainable operational profit margins.</li>
         </ul>
-        <a href="https://tiyonz.github.io/Tiyan-Gandhi-Manara---Resume/sentra-aren/" class="project-link" target="_blank" rel="noopener">
-          View Interactive Model →
-        </a>
+        <div>
+          <a href="https://tiyonz.github.io/Tiyan-Gandhi-Manara---Resume/sentra-aren/" class="project-link-btn" target="_blank" rel="noopener">
+            View Interactive Model →
+          </a>
+        </div>
       </article>
 
       <!-- CARD 4: RETAIL NETWORK EXPANSION (WAKITA STORE) -->
@@ -403,14 +435,17 @@
           <li>Calculated initial CapEx per outlet (renovations, inventory, equipment) and daily/monthly operational expenses.</li>
           <li>Determined minimum daily transaction targets required to achieve target Payback Period and investor ROI.</li>
         </ul>
-        <a href="https://tiyonz.github.io/Tiyan-Gandhi-Manara---Resume/wakita-retail/" class="project-link" target="_blank" rel="noopener">
-          View Interactive Model →
-        </a>
+        <div>
+          <a href="https://tiyonz.github.io/Tiyan-Gandhi-Manara---Resume/wakita-retail/" class="project-link-btn" target="_blank" rel="noopener">
+            View Interactive Model →
+          </a>
+        </div>
       </article>
 
     </div>
   </div>
 </section>
+  
 <div class="skills-band">
   <div class="wrap">
     <div class="section-head" style="margin-bottom:36px;"><h2 style="color:var(--ink);">Skills</h2><span class="section-num" style="color:var(--teal);">05 / TOOLKIT</span></div>
