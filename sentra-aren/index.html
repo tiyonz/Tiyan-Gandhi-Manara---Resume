@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentra Aren Feasibility & Operational Model — Tiyan Gandhi Manara</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #181C27;
+      --ink-soft: #242B39;
+      --paper: #F0EDE6;
+      --paper-dim: #E4DED2;
+      --brass: #C9A227;
+      --brass-soft: #E4C55E;
+      --teal: #3E6259;
+      --line: rgba(240, 237, 230, 0.14);
+      --line-dark: rgba(24, 28, 39, 0.12);
+      --text-dim: rgba(240, 237, 230, 0.68);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+    header {
+      padding: 48px 0 32px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--brass-soft);
+      text-decoration: none;
+      margin-bottom: 20px;
+    }
+    .back-btn:hover { text-decoration: underline; }
+
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--brass);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2.4rem;
+      font-weight: 600;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 1rem;
+      margin-top: 10px;
+      max-width: 70ch;
+    }
+
+    /* Grid Layout */
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 32px;
+      margin-top: 36px;
+    }
+
+    /* Controls Panel */
+    .panel {
+      background: var(--ink-soft);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      height: fit-content;
+    }
+
+    .panel h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      margin-bottom: 18px;
+      color: var(--paper);
+    }
+
+    .control-group {
+      margin-bottom: 18px;
+    }
+
+    .control-group label {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .control-group input[type="range"] {
+      width: 100%;
+      accent-color: var(--brass);
+    }
+
+    .val-display {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--brass-soft);
+      float: right;
+    }
+
+    /* Output Section */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .metric-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      padding: 18px;
+      border-radius: 6px;
+    }
+
+    .metric-card .lbl {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .metric-card .val {
+      font-family: 'Fraunces', serif;
+      font-size: 1.6rem;
+      color: var(--brass-soft);
+      margin-top: 4px;
+    }
+
+    .table-container {
+      background: var(--ink-soft);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .table-title {
+      padding: 16px 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--line);
+      color: var(--brass);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    th, td {
+      padding: 12px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    td.num {
+      text-align: right;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .highlight-row {
+      background: rgba(201, 162, 39, 0.08);
+      font-weight: 600;
+    }
+
+    @media (max-width: 820px) {
+      .grid-layout { grid-template-columns: 1fr; }
+      .results-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a href="../index.html" class="back-btn">← Kembali ke Resume Resume</a>
+    <div class="tag">Agro-Industry Feasibility & Operational Model</div>
+    <h1>Sentra Aren Financial Simulation</h1>
+    <p class="subtitle">Interaktif kalkulator finansial & simulasi siklus produksi pengolahan gula aren (nira & gula gandu menjadi gula semut) berdasarkan model kelayakan PT. Cahaya Putra Sukses.</p>
+  </header>
+
+  <div class="grid-layout">
+    <!-- PANEL INPUT SIMULASI -->
+    <div class="panel">
+      <h2>Parameter Produksi</h2>
+
+      <div class="control-group">
+        <label>Kapasitas Olah Nira (Kg/Hari) <span id="niraVal" class="val-display">500</span></label>
+        <input type="range" id="niraInput" min="100" max="2000" step="50" value="500">
+      </div>
+
+      <div class="control-group">
+        <label>Harga Beli Nira (Rp/Kg) <span id="hargaNiraVal" class="val-display">2.500</span></label>
+        <input type="range" id="hargaNiraInput" min="1000" max="5000" step="100" value="2500">
+      </div>
+
+      <div class="control-group">
+        <label>Harga Jual Gula Semut (Rp/Kg) <span id="hargaJualVal" class="val-display">35.000</span></label>
+        <input type="range" id="hargaJualInput" min="20000" max="60000" step="1000" value="35000">
+      </div>
+
+      <div class="control-group">
+        <label>Tenaga Kerja (Orang) <span id="tkVal" class="val-display">4</span></label>
+        <input type="range" id="tkInput" min="1" max="15" step="1" value="4">
+      </div>
+
+      <div class="control-group">
+        <label>Upah TK (Rp/Orang/Hari) <span id="upahVal" class="val-display">50.000</span></label>
+        <input type="range" id="upahInput" min="30000" max="150000" step="5000" value="50000">
+      </div>
+    </div>
+
+    <!-- PANEL HASIL SIMULASI -->
+    <div>
+      <div class="results-grid">
+        <div class="metric-card">
+          <div class="lbl">Hasil Gula Semut / Hari</div>
+          <div class="val" id="outGulaSemut">350 Kg</div>
+        </div>
+        <div class="metric-card">
+          <div class="lbl">Estimasi Gross Profit / Bulan</div>
+          <div class="val" id="outGrossProfit">Rp 0</div>
+        </div>
+        <div class="metric-card">
+          <div class="lbl">Rasio Konversi Rendemen</div>
+          <div class="val">1 : 0.70</div>
+        </div>
+        <div class="metric-card">
+          <div class="lbl">Estimasi Daya Listrik</div>
+          <div class="val">29.34 kWh</div>
+        </div>
+      </div>
+
+      <!-- TABEL RIGKASAN STRUKTUR BIAYA -->
+      <div class="table-container">
+        <div class="table-title">Simulasi Operasional & Margin Bulanan (25 Hari Kerja)</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Komponen Biaya / Pendapatan</th>
+              <th style="text-align: right;">Estimasi Per Bulan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Total Penjualan Gula Semut</td>
+              <td class="num" id="rowOmset">Rp 0</td>
+            </tr>
+            <tr>
+              <td>Bahan Baku Nira Aren</td>
+              <td class="num" id="rowNira">Rp 0</td>
+            </tr>
+            <tr>
+              <td>Tenaga Kerja Harian Production</td>
+              <td class="num" id="rowTK">Rp 0</td>
+            </tr>
+            <tr>
+              <td>Biaya Operasional & Energi (Solar, LPG, Listrik)</td>
+              <td class="num" id="rowEnergi">Rp 0</td>
+            </tr>
+            <tr class="highlight-row">
+              <td>Estimasi Laba Kotor Operasional</td>
+              <td class="num" id="rowLaba" style="color: var(--brass-soft);">Rp 0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TABEL SPESIFIKASI ALAT PRODUKSI -->
+      <div class="table-container">
+        <div class="table-title">Spesifikasi Peralatan (Cycle Sistem)</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Peralatan</th>
+              <th>Kapasitas</th>
+              <th style="text-align: right;">Daya (Watt)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mesin Kristalisator (5 Unit)</td>
+              <td>3.5 kg / 3 Jam</td>
+              <td class="num">3.300 Watt</td>
+            </tr>
+            <tr>
+              <td>Mesin Pengering (Oven)</td>
+              <td>100 kg / Jam</td>
+              <td class="num">25.600 Watt</td>
+            </tr>
+            <tr>
+              <td>Mesin Grinding & Sortasi</td>
+              <td>150 kg / Jam</td>
+              <td class="num">440 Watt</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function formatIDR(val) {
+    return 'Rp ' + Math.round(val).toLocaleString('id-ID');
+  }
+
+  function recalculate() {
+    const nira = parseFloat(document.getElementById('niraInput').value);
+    const hargaNira = parseFloat(document.getElementById('hargaNiraInput').value);
+    const hargaJual = parseFloat(document.getElementById('hargaJualInput').value);
+    const tk = parseFloat(document.getElementById('tkInput').value);
+    const upah = parseFloat(document.getElementById('upahInput').value);
+
+    // Update Label UI
+    document.getElementById('niraVal').innerText = nira.toLocaleString('id-ID');
+    document.getElementById('hargaNiraVal').innerText = hargaNira.toLocaleString('id-ID');
+    document.getElementById('hargaJualVal').innerText = hargaJual.toLocaleString('id-ID');
+    document.getElementById('tkVal').innerText = tk;
+    document.getElementById('upahVal').innerText = upah.toLocaleString('id-ID');
+
+    // Formula berbasis konversi sheet Excel (2.5 Kg Nira -> 1.75 Kg Gula Semut)
+    const konversiRendemen = 1.75 / 2.5; // 0.7
+    const gulaSemutPerHari = nira * konversiRendemen;
+    
+    // Perhitungan 25 Hari Kerja / Bulan
+    const omsetBulan = gulaSemutPerHari * hargaJual * 25;
+    const biayaNiraBulan = nira * hargaNira * 25;
+    const biayaTKBulan = tk * upah * 25;
+    
+    // Estimasi biaya energi fixed per bulan (Solar 500k, Listrik ~1.1m, Operasional 1m, LPG)
+    const biayaEnergiBulan = 500000 + 1100000 + 1000000 + 750000;
+    const totalPengeluaranBulan = biayaNiraBulan + biayaTKBulan + biayaEnergiBulan;
+    const grossProfitBulan = omsetBulan - totalPengeluaranBulan;
+
+    // Update Output UI
+    document.getElementById('outGulaSemut').innerText = gulaSemutPerHari.toLocaleString('id-ID') + ' Kg';
+    document.getElementById('outGrossProfit').innerText = formatIDR(grossProfitBulan);
+    
+    document.getElementById('rowOmset').innerText = formatIDR(omsetBulan);
+    document.getElementById('rowNira').innerText = formatIDR(biayaNiraBulan);
+    document.getElementById('rowTK').innerText = formatIDR(biayaTKBulan);
+    document.getElementById('rowEnergi').innerText = formatIDR(biayaEnergiBulan);
+    document.getElementById('rowLaba').innerText = formatIDR(grossProfitBulan);
+  }
+
+  // Event Listeners
+  document.getElementById('niraInput').addEventListener('input', recalculate);
+  document.getElementById('hargaNiraInput').addEventListener('input', recalculate);
+  document.getElementById('hargaJualInput').addEventListener('input', recalculate);
+  document.getElementById('tkInput').addEventListener('input', recalculate);
+  document.getElementById('upahInput').addEventListener('input', recalculate);
+
+  // Initial Calculation
+  recalculate();
+</script>
+
+</body>
+</html>
