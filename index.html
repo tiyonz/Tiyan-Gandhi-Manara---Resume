@@ -162,12 +162,12 @@
     .project li { color:rgba(240,237,230,.83); font-size:.9rem; padding-left:15px; position:relative; }
     .project li::before { content:"•"; color:var(--brass); position:absolute; left:0; }
     
-    /* Tampilan Button untuk Link Model/Project */
+    /* Project Link Button */
     .project-link-btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-top: 18px; /* Memberi jarak enter dari list di atasnya */
+      margin-top: 18px;
       padding: 8px 16px;
       background-color: rgba(255, 255, 255, 0.05);
       color: #ffffff;
@@ -178,8 +178,6 @@
       text-decoration: none;
       transition: all 0.25s ease;
     }
-    
-    /* Efek Hover saat kursor diarahkan ke button */
     .project-link-btn:hover {
       background-color: #ffffff;
       color: #0d0d0d;
@@ -188,12 +186,47 @@
       box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
     }
 
+    /* Certifications Section */
+    .cert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .cert-card {
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,0.15);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .cert-img-wrap {
+      width: 100%;
+      height: 220px;
+      background: #0d0f14;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+    .cert-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+    .cert-card:hover .cert-img { transform: scale(1.03); }
+    .cert-content { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+    .cert-meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brass-soft); margin-bottom: 8px; text-transform: uppercase; }
+    .cert-title { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 500; margin-bottom: 10px; color: var(--paper); }
+    .cert-desc { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 16px; flex: 1; }
+    .cert-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+    .cert-badge { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; padding: 4px 8px; background: rgba(201,162,39,0.12); border: 1px solid rgba(201,162,39,0.3); color: var(--brass-soft); border-radius: 3px; }
+
     /* Skills */
     .skills-band { background:var(--paper); color:var(--ink); padding:68px 0; }
     .skill-groups { display:grid; grid-template-columns:repeat(2,1fr); gap:34px 50px; }
     .skill-group h3 { font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--teal); margin-bottom:14px; }
     .chips { display:flex; flex-wrap:wrap; gap:8px; }
     .chip { font-family:'IBM Plex Mono',monospace; font-size:12px; padding:7px 11px; background:rgba(24,28,39,.055); border:1px solid rgba(24,28,39,.14); border-radius:3px; }
+    .chip.featured { background: rgba(201,162,39,0.18); border-color: rgba(201,162,39,0.4); font-weight: 600; }
 
     /* Education */
     .on-paper { background:var(--paper); color:var(--ink); border-bottom:none; }
@@ -215,7 +248,7 @@
       .hero-grid { grid-template-columns:1fr; gap:25px; }
       .avatar-wrap, .avatar { width:136px; height:136px; }
       .summary-band .wrap { grid-template-columns:1fr; gap:14px; }
-      .highlights-grid, .project-grid { grid-template-columns:1fr; }
+      .highlights-grid, .project-grid, .cert-grid { grid-template-columns:1fr; }
       .row, .edu-row { grid-template-columns:1fr; gap:8px; }
       .row .dates, .edu-row .dates { text-align:left; }
       .skill-groups { grid-template-columns:1fr; gap:28px; }
@@ -445,22 +478,115 @@
     </div>
   </div>
 </section>
+
+<!-- CERTIFICATIONS & CREDENTIALS SECTION -->
+<section id="certifications">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Certifications & Credentials</h2>
+      <span class="section-num">05 / VERIFIED CREDENTIALS</span>
+    </div>
+    <div class="cert-grid">
+
+      <!-- CERTIFICATE 1: OUTLIER EDU RUBRICS -->
+      <article class="cert-card">
+        <div class="cert-img-wrap">
+          <img class="cert-img" src="outlieredu-rubrics-badge.png" alt="OutlierEDU Rubrics Badge">
+        </div>
+        <div class="cert-content">
+          <div class="cert-meta">Outlier · Credential ID: OL-EDU-RUBRICS-2026</div>
+          <h3 class="cert-title">OutlierEDU: Rubrics</h3>
+          <p class="cert-desc">Awarded by Outlier for completing the OutlierEDU Rubrics course. Certifies an understanding of how rubrics function as post-training data and the principles behind crafting effective rubrics that improve Large Language Model (LLM) performance.</p>
+          <div class="cert-skills">
+            <span class="cert-badge">Large Language Models (LLM)</span>
+            <span class="cert-badge">Post-Training Data</span>
+            <span class="cert-badge">Rubric Creation</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- CERTIFICATE 2: RWS LINGUISTIC AI -->
+      <article class="cert-card">
+        <div class="cert-img-wrap">
+          <img class="cert-img" src="Tiyan_Gandhi Manara - Linguistic AI Certification by RWS.png" alt="RWS Linguistic AI Certification Training Certificate">
+        </div>
+        <div class="cert-content">
+          <div class="cert-meta">RWS · Issued 08 September 2026</div>
+          <h3 class="cert-title">RWS Linguistic AI Certification Training</h3>
+          <p class="cert-desc">Official completion certificate for successfully passing the Linguistic AI Certification Training provided by RWS, demonstrating advanced skills in linguistic AI data evaluation and quality standards.</p>
+          <div class="cert-skills">
+            <span class="cert-badge">Linguistic AI</span>
+            <span class="cert-badge">AI Data Evaluation</span>
+            <span class="cert-badge">Language Quality Control</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
   
 <div class="skills-band">
   <div class="wrap">
-    <div class="section-head" style="margin-bottom:36px;"><h2 style="color:var(--ink);">Skills</h2><span class="section-num" style="color:var(--teal);">05 / TOOLKIT</span></div>
+    <div class="section-head" style="margin-bottom:36px;"><h2 style="color:var(--ink);">Skills</h2><span class="section-num" style="color:var(--teal);">06 / TOOLKIT</span></div>
     <div class="skill-groups">
-      <div class="skill-group"><h3>AI & Evaluation</h3><div class="chips"><span class="chip">AI Response Evaluation</span><span class="chip">Speech-to-Speech (S2S) Evaluation</span><span class="chip">Preference Ranking</span><span class="chip">Guideline-Based Evaluation</span><span class="chip">Code-Switching & Dialect Analysis</span><span class="chip">Evidence-Based Rationale Writing</span></div></div>
-      <div class="skill-group"><h3>Operations & Analysis</h3><div class="chips"><span class="chip">Document Review</span><span class="chip">SOP Development</span><span class="chip">Workflow Mapping</span><span class="chip">Data Tracking</span><span class="chip">Operational Reporting</span><span class="chip">Credit Analysis</span><span class="chip">Procurement</span><span class="chip">Vendor Coordination</span></div></div>
-      <div class="skill-group"><h3>Spreadsheets & Tools</h3><div class="chips"><span class="chip">Microsoft Excel</span><span class="chip">VLOOKUP / XLOOKUP</span><span class="chip">SUMIF / SUMIFS</span><span class="chip">IF Formulas</span><span class="chip">PivotTables</span><span class="chip">Dashboard Basics</span><span class="chip">Google Sheets</span></div></div>
-      <div class="skill-group"><h3>Working Style</h3><div class="chips"><span class="chip">Attention to Detail</span><span class="chip">Structured Problem Solving</span><span class="chip">Independent Remote Work</span><span class="chip">Documentation Discipline</span><span class="chip">Written English</span><span class="chip">Adaptability</span></div></div>
+      <div class="skill-group">
+        <h3>AI & Evaluation</h3>
+        <div class="chips">
+          <span class="chip featured">Large Language Models (LLM)</span>
+          <span class="chip featured">Post-Training Data & Rubrics</span>
+          <span class="chip featured">Linguistic AI</span>
+          <span class="chip">AI Response Evaluation</span>
+          <span class="chip">Speech-to-Speech (S2S) Evaluation</span>
+          <span class="chip">Preference Ranking</span>
+          <span class="chip">Guideline-Based Evaluation</span>
+          <span class="chip">Code-Switching & Dialect Analysis</span>
+          <span class="chip">Evidence-Based Rationale Writing</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Operations & Analysis</h3>
+        <div class="chips">
+          <span class="chip">Document Review</span>
+          <span class="chip">SOP Development</span>
+          <span class="chip">Workflow Mapping</span>
+          <span class="chip">Data Tracking</span>
+          <span class="chip">Operational Reporting</span>
+          <span class="chip">Credit Analysis</span>
+          <span class="chip">Procurement</span>
+          <span class="chip">Vendor Coordination</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Spreadsheets & Tools</h3>
+        <div class="chips">
+          <span class="chip">Microsoft Excel</span>
+          <span class="chip">VLOOKUP / XLOOKUP</span>
+          <span class="chip">SUMIF / SUMIFS</span>
+          <span class="chip">IF Formulas</span>
+          <span class="chip">PivotTables</span>
+          <span class="chip">Dashboard Basics</span>
+          <span class="chip">Google Sheets</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Working Style</h3>
+        <div class="chips">
+          <span class="chip">Attention to Detail</span>
+          <span class="chip">Structured Problem Solving</span>
+          <span class="chip">Independent Remote Work</span>
+          <span class="chip">Documentation Discipline</span>
+          <span class="chip">Written English</span>
+          <span class="chip">Adaptability</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <section id="education" class="on-paper">
   <div class="wrap">
-    <div class="section-head"><h2>Education</h2><span class="section-num" style="color:var(--teal);">06 / BACKGROUND</span></div>
+    <div class="section-head"><h2>Education</h2><span class="section-num" style="color:var(--teal);">07 / BACKGROUND</span></div>
     <div class="edu-row"><div class="dates">2012 — 2015</div><div><div class="role">Associate Degree in Accounting</div><div class="org">Politeknik LP3I, Bandung · GPA 3.11</div></div></div>
     <div class="language">Indonesian (Native) &nbsp;·&nbsp; English (Intermediate / Working Proficiency)</div>
   </div>
